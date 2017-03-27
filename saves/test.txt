@@ -1,0 +1,1 @@
+{"word":"retentively","guesses":["e"],"lives":10,"feedback_string":["_","e","_","e","_","_","_","_","e","_","_"]}

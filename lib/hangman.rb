@@ -1,8 +1,19 @@
+require 'json'
+
 class Game
 
   def initialize
-    reset
-    play
+    puts "1. New Game\n2. Load Game"
+    case gets.chomp.to_i
+    when 1
+      reset
+      play
+    when 2
+      load_game
+      play
+    else
+      puts "1 or 2 please"
+    end
   end
 
   def reset
@@ -46,7 +57,7 @@ class Game
 
   def play_again
     puts "Play again? y/n"
-    print ">"
+    print "> "
     return false unless gets.chomp.downcase == "y"
     reset
     true
@@ -54,9 +65,22 @@ class Game
 
   def save_game
     puts "Game saved"
+    File.open("saves/test.txt", "w") {|save| save.write(serialize)}
     exit
   end
 
+  def load_game
+      JSON.load(File.open("saves/test.txt", 'r').read).each do |var,val|
+      self.instance_variable_set '@'+var,val
+    end
+  end
+
+  def serialize
+    {"word" => @word,
+     "guesses" => @guesses,
+     "lives" => @lives,
+     "feedback_string" => @feedback_string}.to_json
+  end
 
   def play
     loop do
