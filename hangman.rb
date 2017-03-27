@@ -1,6 +1,7 @@
 class Game
 
   def initialize
+    reset
     play
   end
 
@@ -47,6 +48,7 @@ class Game
     puts "Play again? y/n"
     print ">"
     return false unless gets.chomp.downcase == "y"
+    reset
     true
   end
 
@@ -58,7 +60,6 @@ class Game
 
   def play
     loop do
-      reset
       while true
         puts "\nLives left: #{@lives}"
         puts @feedback_string.join(' ')
