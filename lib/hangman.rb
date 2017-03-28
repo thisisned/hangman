@@ -3,7 +3,8 @@ require 'json'
 class Game
 
   def initialize
-    puts "1. New Game\n2. Load Game"
+    puts "1. New Game\n2. Load Game\n"
+    print "> "
     case gets.chomp.to_i
     when 1
       reset
@@ -31,14 +32,15 @@ class Game
   end
 
   def get_guess
+    print "\nGuess (or type 'save' to save and quit): > "
     guess = gets.chomp.to_s.downcase
     if guess == "save"
       save_game
     elsif !guess.between?('a', 'z') || guess.length > 1
-      puts "One letter please.\n\n"
+      puts "\nOne letter please.\n"
       return false
     elsif @guesses.include?(guess)
-      puts "Already guessed.\n\n"
+      puts "\nAlready guessed.\n"
       return false
     else return guess
     end
@@ -64,14 +66,32 @@ class Game
   end
 
   def save_game
+    puts "Save name?"
+    print "> "
+    save_name = gets.chomp
+    File.open("saves/#{save_name}", "w") {|save| save.write(serialize)}
     puts "Game saved"
-    File.open("saves/test.txt", "w") {|save| save.write(serialize)}
     exit
   end
 
   def load_game
-      JSON.load(File.open("saves/test.txt", 'r').read).each do |var,val|
-      self.instance_variable_set '@'+var,val
+    saved_games = Dir["saves/*"]
+    if saved_games.empty?
+      puts "No saved games. See ya."
+      exit
+    end
+    saved_games.each_with_index do |save, n|
+      puts "#{n+1}. #{save[6..-1]}"
+    end
+    loop do
+      print "> "
+      load_choice = gets.chomp.to_i
+      if load_choice.between?(1, saved_games.length)
+        JSON.load(File.open(saved_games[load_choice - 1], 'r').read).each do |var,val|
+          self.instance_variable_set '@'+var,val
+        end
+        break
+      end
     end
   end
 
@@ -80,19 +100,18 @@ class Game
      "guesses" => @guesses,
      "lives" => @lives,
      "feedback_string" => @feedback_string}.to_json
-  end
+   end
 
-  def play
+   def play
     loop do
       while true
-        puts "\nLives left: #{@lives}"
-        puts @feedback_string.join(' ')
+        puts "\n" + @feedback_string.join(' ')
+        puts "\nLives left: #{@lives} || Guessed: #{@guesses.join(', ')}\n"
         guess = get_guess
         if guess
           @guesses << guess
           check(guess)
         end
-        puts "Guessed: #{@guesses.join(', ')}"
         if @lives < 1
           puts "\nNo lives left.\n\n"
           break
