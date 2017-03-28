@@ -3,7 +3,7 @@ require 'json'
 class Game
 
   def initialize
-    puts "1. New Game\n2. Load Game\n"
+    puts "\n1. New Game\n2. Load Game\n"
     print "> "
     case gets.chomp.to_i
     when 1
