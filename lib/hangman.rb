@@ -117,7 +117,7 @@ class Game
           break
         end
         if @feedback_string.join == @word
-          puts "\n|" + @feedback_string.join(' ')
+          puts "\n" + @feedback_string.join(' ')
           puts "\nYou win!\n\n"
           break
         end 
