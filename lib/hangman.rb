@@ -25,7 +25,7 @@ class Game
   end
 
   def get_word
-    dictionary = File.readlines("5desk.txt")
+    dictionary = File.readlines("../5desk.txt")
     dictionary.each { |word| word.chomp! }
     word_list = dictionary.select { |word| word.length.between?(5, 12) && /[a-z]/.match(word[0]) }
     return word_list.sample
@@ -69,19 +69,19 @@ class Game
     puts "Save name?"
     print "> "
     save_name = gets.chomp
-    File.open("saves/#{save_name}", "w") {|save| save.write(serialize)}
+    File.open("../saves/#{save_name}", "w") {|save| save.write(serialize)}
     puts "Game saved"
     exit
   end
 
   def load_game
-    saved_games = Dir["saves/*"]
+    saved_games = Dir["../saves/*"]
     if saved_games.empty?
       puts "No saved games. See ya."
       exit
     end
     saved_games.each_with_index do |save, n|
-      puts "#{n+1}. #{save[6..-1]}"
+      puts "#{n+1}. #{save[9..-1]}"
     end
     loop do
       print "> "
